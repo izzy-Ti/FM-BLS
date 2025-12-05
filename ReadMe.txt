@@ -1,85 +1,109 @@
-===========================================================================
-Fellowship Management & Bible Learning System (FM-BLS)
-===========================================================================
+1. Folder / Project Structure (Conceptual)
 
-Purpose:
-A digital platform for fellowship students to manage their journey,
-track their involvement, learn the Bible, and grow spiritually 
-within a gamified and structured system.
+Main areas:
 
-Features:
+Config: Database connections, environment setup.
 
-1. Student Onboarding & Family Assignment
-   - New students (freshmen) sign up and are automatically assigned a fellowship family.
-   - Each family acts as a mentorship/support group for guidance.
-   - Family dashboard shows:
-     * Members
-     * Family mentor
-     * Upcoming events and meetings
+Middleware: Handles authentication, error handling, and optional rate limiting.
 
-2. Team Selection
-   - After one semester, students can choose one of the fellowship teams:
-     * Choir
-     * Bible Study
-     * Action/Community Service
-     * Literature/Arts
-   - Each team has a dashboard:
-     * List of team members
-     * Team activities/events
-     * Team goals and progress
+Models: Define the structure of your data (Users, Lessons, Quizzes, Families, XP, Badges, Verse of the Day).
 
-3. Fellowship Cycle Tracker
-   - Visual timeline showing student progress through:
-     * Family assignment
-     * Team selection
-     * Participation in events and programs
-   - Gamified milestones & badges for:
-     * Completing first semester
-     * Choosing a team
-     * Participating in first event
+Controllers: Business logic for handling requests (e.g., logging in, completing lessons, submitting reflections).
 
-4. Bible Study Learning Management System (LMS)
-   - Fellowship uploads Bible lessons, readings, and study materials.
-   - Students can:
-     * Read lessons online
-     * Take quizzes or reflections to reinforce learning
-     * Track streaks (daily/weekly study)
-     * Earn XP (experience points) for completing lessons
-   - Leaderboard for friendly competition and motivation
+Routes: Define endpoints users can access (e.g., login, get lessons, join family).
 
-5. Gamification & Engagement
-   - XP & Levels: Earn points for activities like:
-     * Daily Bible study
-     * Attending events
-     * Participating in team activities
-   - Streaks: Reward continuous engagement (Bible reading, team participation)
-   - Badges: Showcase achievements such as:
-     * "Choir Star"
-     * "Bible Scholar"
-     * "Action Hero"
-   - Leaderboards:
-     * Overall leaderboard
-     * Team-based leaderboard
-     * Weekly and monthly top XP earners
+Utils: Helper functions like XP calculation, badge logic, or sending notifications.
 
-6. Community & Interaction
-   - Messaging system for:
-     * Family chats
-     * Team discussions
-     * General fellowship announcements
-   - Event calendar with RSVP functionality
-   - Notifications for milestones, events, and new lessons
 
-7. Admin/Leadership Dashboard
-   - Fellowship leaders can:
-     * Assign families
-     * Upload Bible study materials
-     * Track team progress and student engagement
-     * Generate reports for events and participation
+2. Models (Data Structures)
 
-Optional Enhancements:
-   - Prayer Requests & Praise Wall
-   - Daily Devotional Reminder
-   - Achievement Showcase
-   - Team Challenges
+User:
+- Name, email, password, role (user/leader/admin)
+- XP, streak, last login date
+- Family reference
+- Badges collected
 
+Lesson:
+- Title, content (text/video/audio), module
+- Creator (leader) reference
+
+Quiz:
+- Questions for a lesson
+- Options and correct answers
+
+Family / Group:
+- Name, motto, icon
+- Members
+- Total XP of family
+- Optional weekly challenges
+
+Verse of the Day:
+- Daily verse
+- Reflections from users
+- XP awarded for reflections
+
+Badge:
+- Name, description, icon
+- Criteria for earning (e.g., complete 5 lessons, 7-day streak, etc.)
+
+
+3. Controllers (Business Logic)
+
+Auth Controller: Handles login, registration, and token generation.
+
+User Controller: View/update profile, track XP and streaks, assign badges.
+
+Lesson Controller: Create, edit, delete, and view lessons.
+
+Quiz Controller: Submit answers, calculate XP.
+
+Family Controller: Create/join families, track group progress, update family XP.
+
+Verse Controller: Fetch today’s verse, submit reflections, award bonus XP.
+
+Leaderboard Controller: Show global user leaderboard and family leaderboard, calculate leagues.
+
+
+4. Routes (Endpoints)
+
+Auth Routes: Register, login
+
+User Routes: Get profile, view XP, streak, badges
+
+Lesson Routes: List lessons, view lesson details, create lessons (leaders)
+
+Quiz Routes: Submit quiz answers
+
+Family Routes: Create family, join family, view family stats
+
+Verse Routes: Get verse of the day, submit reflection
+
+Leaderboard Routes: View top users and top families
+
+
+5. Middleware (Request Handling)
+
+Authentication: Ensure users are logged in and attach their info to requests.
+
+Authorization: Check if a user is a leader/admin before allowing lesson creation.
+
+Error Handling: Catch errors and send clear responses.
+
+Optional Rate Limiting: Prevent abuse by limiting requests per time period.
+
+
+6. Gamification Logic
+
+XP: Earned by completing lessons, quizzes, and submitting reflections.
+
+Streaks: Increase with consecutive learning days; resets if user misses a day.
+
+Leaderboards:
+- Users ranked by XP, with league tiers (Bronze → Silver → Gold → Platinum)
+- Families ranked by total collective XP
+
+Badges: Awarded for milestones (lesson completions, streaks, family achievements).
+
+Verse of the Day Challenge: Daily verse encourages reflections and bonus XP.
+
+Family Goals: Async challenges for families to earn badges and XP collectively.
