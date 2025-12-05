@@ -15,6 +15,7 @@ const UserSchema = new mongoose.Schema({
     streak: { type: Number, default: 0 },
     league: { type: String, enum: ["BRONZE", "SILVER", "GOLD", "PLATINUM", "DIAMOND"], default: "BRONZE" },
     xp: { type: Number, default: 0 },
+    LastactionDate: { type: Date, default: Date.now },
 }, { timestamps: true })
 
 export const user = mongoose.model('user', UserSchema)

@@ -34,17 +34,51 @@ export const register = async (req, res) => {
       sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
       maxAge: 7 * 24 * 60 * 60 * 1000
     })
+    const mailOption = {
+      sender: { email: process.env.EMAIL },
+      to: [{ email: email }],
+      subject: 'Welcome to FM_BLS!',
+      htmlContent: `
+    <div style="font-family: Arial, sans-serif; background-color: #0A174E; color: #fff; padding: 20px; border-radius: 8px;">
+      <div style="text-align: center;">
+        <h1 style="color: #F5D042;"> Welcome to FM_BLS, ${name} </h1>
+        <p style="font-size: 16px; color: #ddd;">Your Bible learning journey starts here!</p>
+      </div>
+      <div style="background-color: #112265; padding: 20px; border-radius: 8px;">
+        <p style="font-size: 18px; color: #fff;">Your account has been successfully created with the following details:</p>
+        <table style="width: 100%; margin-top: 10px; color: #fff;">
+          <tr>
+            <td style="padding: 8px; font-weight: bold;">Name:</td>
+            <td style="padding: 8px;">${name}</td>
+          </tr>
+          <tr>
+            <td style="padding: 8px; font-weight: bold;">Email:</td>
+            <td style="padding: 8px;">${email}</td>
+          </tr>
+        </table>
 
-    //sending welcome email
+        <p style="font-size: 16px; margin-top: 15px; color: #F5D042;">
+          Please complete your profile by adding your preferred Bible study topics and joining a family group.  
+          Our team will review your profile to ensure a smooth learning experience.
+        </p>
 
-    const mailOption = ({
-      from: process.env.EMAIL,
-      to: email,
-      subject: 'Welcome to E_learn',
-      text: `Welcome to E_learn.Hello ${name} Your account is created with email id: ${email}`
-    })
-    await transporter.sendMail(mailOption)
-
+        <div style="text-align: center; margin-top: 20px;">
+          <a href="https://fm-bls.astu.edu/profile" 
+             style="background-color: #F5D042; color: #0A174E; padding: 12px 25px; text-decoration: none; font-size: 16px; border-radius: 5px; font-weight: bold;">
+             Complete Your Profile
+          </a>
+        </div>
+      </div>
+      <p style="text-align: center; color: #bbb; margin-top: 30px;">
+        Need help? <a href="mailto:support@fm-bls.astu.edu" style="color: #F5D042;">Contact us</a>.
+      </p>
+      <p style="text-align: center; font-size: 14px; color: #aaa;">
+        &copy; ${new Date().getFullYear()} FM_BLS by Fellowship of ASTU - All Rights Reserved
+      </p>
+    </div>
+  `
+    };
+    await transporter.sendTransacEmail(mailOption);
     res.json({ success: true })
   } catch (error) {
     return res.json({ success: false, message: error.message })
