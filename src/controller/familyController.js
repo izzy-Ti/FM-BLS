@@ -58,3 +58,20 @@ export const famLeaderboard = async (req, res) => {
         res.json({ success: false, message: error.message });
     }
 }
+export const addMember = async (req, res) => {
+    try {
+        const { familyId } = req.params;
+        const { email } = req.body;
+        const User = await user.findOne({ email });
+        const fam = await family.findById(familyId);
+        if (!fam) {
+            return res.json({ success: false, message: "Family not found" });
+        }
+        fam.xp = fam.xp + User.xp;
+        fam.members.push(User._id);
+        await fam.save();
+        res.json({ success: true, message: "Family member added successfully" });
+    } catch (error) {
+        res.json({ success: false, message: error.message });
+    }
+}
