@@ -1,6 +1,7 @@
 import { Router } from 'express'
 import { getUserData, isAuth, login, logout, register, resetPassword, sendResetOTP, sendVerifyOTP, updateProfile, verifyOTP } from '../controller/authController.js'
 import userAuth from '../middleware/authMiddleware.js'
+import { updateBadgeMiddle } from '../middleware/leagueMiddleware.js'
 
 const router = Router()
 
@@ -12,7 +13,7 @@ router.post('/verify-otp', userAuth, verifyOTP)
 router.post('/is-auth', userAuth, isAuth)
 router.post('/send-reset-password', sendResetOTP)
 router.post('/reset-password', resetPassword)
-router.post('/get-user-data', userAuth, getUserData)
+router.post('/get-user-data', userAuth, updateBadgeMiddle, getUserData)
 router.post('/updateProfile', userAuth, updateProfile)
 
 

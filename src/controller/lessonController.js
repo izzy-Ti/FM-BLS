@@ -235,6 +235,22 @@ export const completeLesson = async (req, res) => {
         } else if (diffDays > 1) {
             User.streak = 1;
         }
+
+        if (User.xp >= 2000) {
+            User.league = "BRONZE"
+        }
+        if (User.xp >= 5000) {
+            User.league = "SILVER"
+        }
+        if (User.xp >= 10000) {
+            User.league = "GOLD"
+        }
+        if (User.xp >= 20000) {
+            User.league = "PLATINUM"
+        }
+        if (User.xp >= 50000) {
+            User.league = "DIAMOND"
+        }
         User.LastactionDate = new Date();
         await User.save();
         res.json({ success: true, message: "Lesson completed successfully", lesson: Lesson });
