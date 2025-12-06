@@ -11,7 +11,7 @@ const register = async (port) => {
                 name: 'Test User',
                 email: `test${Date.now()}@example.com`,
                 password: 'password123',
-                role: 'STUDENT'
+                role: 'USER'
             })
         });
         const data = await response.json();
