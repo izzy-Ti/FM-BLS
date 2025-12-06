@@ -103,3 +103,25 @@ export const deleteCourse = async (req, res) => {
         res.json({ success: false, message: error.message })
     }
 }
+export const updateLesson = async (req, res) => {
+    const lessonId = req.params.lessonId;
+    const { title, order, text } = req.body;
+    const file = req.file?.path;
+    try {
+        const updates = {};
+        if (title !== undefined) updates.title = title;
+        if (order !== undefined) updates.order = order;
+        if (text !== undefined) updates.text = text;
+        if (file !== undefined) updates.file = file;
+
+        const Lesson = await lesson.findByIdAndUpdate(lessonId, updates, { new: true });
+
+        if (!Lesson) {
+            return res.json({ success: false, message: "Lesson not found" });
+        }
+
+        res.json({ success: true, message: "Lesson updated successfully", lesson: Lesson });
+    } catch (error) {
+        res.json({ success: false, message: error.message });
+    }
+}
