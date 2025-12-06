@@ -1,5 +1,6 @@
 import { course } from "../models/course.js";
 import { lesson } from "../models/lesson.js";
+import { user } from "../models/user.js";
 
 export const createCourse = async (req, res) => {
     try {
@@ -121,6 +122,73 @@ export const updateLesson = async (req, res) => {
         }
 
         res.json({ success: true, message: "Lesson updated successfully", lesson: Lesson });
+    } catch (error) {
+        res.json({ success: false, message: error.message });
+    }
+}
+export const updateCourse = async (req, res) => {
+    const courseId = req.params.courseId;
+    const { title } = req.body;
+    try {
+        const Course = await course.findByIdAndUpdate(courseId, { title }, { new: true });
+
+        if (!Course) {
+            return res.json({ success: false, message: "Course not found" });
+        }
+
+        res.json({ success: true, message: "Course updated successfully", course: Course });
+    } catch (error) {
+        res.json({ success: false, message: error.message });
+    }
+}
+export const enrollCourse = async (req, res) => {
+    const courseId = req.params.courseId;
+    const userId = req.body.userId;
+    try {
+        const Course = await course.findById(courseId);
+        if (!Course) {
+            return res.json({ success: false, message: "Course not found" });
+        }
+        const User = await user.findById(userId);
+        if (!User) {
+            return res.json({ success: false, message: "User not found" });
+        }
+        User.enrolledCourses.push(courseId);
+        await User.save();
+        res.json({ success: true, message: "Course enrolled successfully", course: Course });
+    } catch (error) {
+        res.json({ success: false, message: error.message });
+    }
+}
+export const unenrollCourse = async (req, res) => {
+    const courseId = req.params.courseId;
+    const userId = req.body.userId;
+    try {
+        const Course = await course.findById(courseId);
+        if (!Course) {
+            return res.json({ success: false, message: "Course not found" });
+        }
+        const User = await user.findById(userId);
+        if (!User) {
+            return res.json({ success: false, message: "User not found" });
+        }
+        User.enrolledCourses.pull(courseId);
+        await User.save();
+        res.json({ success: true, message: "Course unenrolled successfully", course: Course });
+    } catch (error) {
+        res.json({ success: false, message: error.message });
+    }
+}
+export const getEnrolledCourses = async (req, res) => {
+    const userId = req.body.userId;
+    try {
+        const User = await user.findById(userId);
+        if (!User) {
+            return res.json({ success: false, message: "User not found" });
+        }
+        const courseId = User.enrolledCourses;
+        const courses = await course.find({ _id: { $in: courseId } });
+        res.json({ success: true, message: "Enrolled courses found successfully", courses: courses });
     } catch (error) {
         res.json({ success: false, message: error.message });
     }

@@ -16,6 +16,8 @@ const UserSchema = new mongoose.Schema({
     league: { type: String, enum: ["BRONZE", "SILVER", "GOLD", "PLATINUM", "DIAMOND"], default: "BRONZE" },
     xp: { type: Number, default: 0 },
     LastactionDate: { type: Date, default: Date.now },
+    enrolledCourses: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Course' }],
+    completedLessons: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Lesson' }],
 }, { timestamps: true })
 
 export const user = mongoose.model('user', UserSchema)

@@ -249,11 +249,7 @@ export const getUserData = async (req, res) => {
     }
     return res.json({
       success: true,
-      userData: {
-        name: User.name,
-        email: User.email,
-        IsAccVerified: User.IsAccVerified,
-      }
+      User
     })
   } catch (error) {
     return res.json({ success: false, message: error.message })
