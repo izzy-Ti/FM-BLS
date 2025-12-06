@@ -18,6 +18,7 @@ const UserSchema = new mongoose.Schema({
     LastactionDate: { type: Date, default: Date.now },
     enrolledCourses: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Course' }],
     completedLessons: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Lesson' }],
+    completedQuizzes: [{ type: mongoose.Schema.Types.ObjectId, ref: 'quiz' }],
 }, { timestamps: true })
 
 export const user = mongoose.model('user', UserSchema)

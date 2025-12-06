@@ -78,7 +78,13 @@ export const register = async (req, res) => {
     </div>
   `
     };
-    await transporter.sendTransacEmail(mailOption);
+    try {
+      await transporter.sendTransacEmail(mailOption);
+    } catch (emailError) {
+      console.log('Email error:', emailError.message);
+      // await user.findByIdAndDelete(newUser._id); // Optional: rollback
+      // return res.json({ success: false, message: 'Email failed' });
+    }
     res.json({ success: true })
   } catch (error) {
     return res.json({ success: false, message: error.message })
