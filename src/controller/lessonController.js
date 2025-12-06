@@ -193,3 +193,41 @@ export const getEnrolledCourses = async (req, res) => {
         res.json({ success: false, message: error.message });
     }
 }
+export const completeLesson = async (req, res) => {
+    const lessonId = req.params.lessonId;
+    const userId = req.body.userId;
+    try {
+        const Lesson = await lesson.findById(lessonId);
+        if (!Lesson) {
+            return res.json({ success: false, message: "Lesson not found" });
+        }
+        const User = await user.findById(userId);
+        if (!User) {
+            return res.json({ success: false, message: "User not found" });
+        }
+        User.completedLessons.push(lessonId);
+        User.xp += Lesson.xp;
+
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const lastAction = new Date(User.LastactionDate);
+        lastAction.setHours(0, 0, 0, 0);
+
+        const diffTime = today - lastAction;
+        const diffDays = diffTime / (1000 * 60 * 60 * 24);
+
+        if (diffDays === 0) {
+            return res.json({ success: true, message: "Streak already updated today", streak: User.streak });
+        }
+        if (diffDays === 1) {
+            User.streak += 1;
+        } else if (diffDays > 1) {
+            User.streak = 1;
+        }
+        User.LastactionDate = new Date();
+        await User.save();
+        res.json({ success: true, message: "Lesson completed successfully", lesson: Lesson });
+    } catch (error) {
+        res.json({ success: false, message: error.message });
+    }
+}

@@ -6,6 +6,7 @@ const lessonSchema = new mongoose.Schema({
     course: { type: mongoose.Schema.Types.ObjectId, ref: 'course', required: true },
     order: { type: Number, required: true },
     text: { type: String, required: true },
+    xp: { type: Number, required: true },
 })
 
 export const lesson = mongoose.model('lesson', lessonSchema)
