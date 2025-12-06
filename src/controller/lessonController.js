@@ -56,6 +56,17 @@ export const getCourse = async (req, res) => {
         res.json({ success: false, message: error.message })
     }
 }
+export const getallcourses = async (req, res) => {
+    try {
+        const Courses = await course.find()
+        if (!Courses) {
+            return res.json({ success: false, message: "Courses not found" });
+        }
+        res.json({ success: true, message: "Courses found successfully", courses: Courses })
+    } catch (error) {
+        res.json({ success: false, message: error.message })
+    }
+}
 export const getLessons = async (req, res) => {
     const lessonId = req.params.lessonId
     try {
