@@ -1,6 +1,7 @@
 import { course } from "../models/course.js";
 import { lesson } from "../models/lesson.js";
 import { user } from "../models/user.js";
+import { family } from "../models/family.js";
 
 export const createCourse = async (req, res) => {
     try {
@@ -213,6 +214,7 @@ export const completeLesson = async (req, res) => {
             return res.json({ success: false, message: "Lesson not found" });
         }
         const User = await user.findById(userId);
+        const userFamily = await family.findById(User.familyId);
         if (!User) {
             return res.json({ success: false, message: "User not found" });
         }
@@ -251,6 +253,8 @@ export const completeLesson = async (req, res) => {
         if (User.xp >= 50000) {
             User.league = "DIAMOND"
         }
+        userFamily.xp += 50;
+        await userFamily.save()
         User.LastactionDate = new Date();
         await User.save();
         res.json({ success: true, message: "Lesson completed successfully", lesson: Lesson });
