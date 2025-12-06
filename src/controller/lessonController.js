@@ -43,3 +43,63 @@ export const createLesson = async (req, res) => {
         res.json({ success: false, message: error.message })
     }
 }
+export const getCourse = async (req, res) => {
+    const courseId = req.params.courseId
+    try {
+        const Course = await course.findById(courseId)
+        if (!Course) {
+            return res.json({ success: false, message: "Course not found" });
+        }
+        res.json({ success: true, message: "Course found successfully", course: Course })
+    } catch (error) {
+        res.json({ success: false, message: error.message })
+    }
+}
+export const getLessons = async (req, res) => {
+    const lessonId = req.params.lessonId
+    try {
+        const Lesson = await lesson.findById(lessonId)
+        if (!Lesson) {
+            return res.json({ success: false, message: "Lesson not found" });
+        }
+        res.json({ success: true, message: "Lesson found successfully", lesson: Lesson })
+    } catch (error) {
+        res.json({ success: false, message: error.message })
+    }
+}
+export const getLessonByCourse = async (req, res) => {
+    const courseId = req.params.courseId
+    try {
+        const Lesson = await lesson.find({ course: courseId })
+        if (!Lesson) {
+            return res.json({ success: false, message: "Lesson not found" });
+        }
+        res.json({ success: true, message: "Lesson found successfully", lesson: Lesson })
+    } catch (error) {
+        res.json({ success: false, message: error.message })
+    }
+}
+export const deleteLesson = async (req, res) => {
+    const lessonId = req.params.lessonId
+    try {
+        const Lesson = await lesson.findByIdAndDelete(lessonId)
+        if (!Lesson) {
+            return res.json({ success: false, message: "Lesson not found" });
+        }
+        res.json({ success: true, message: "Lesson deleted successfully", lesson: Lesson })
+    } catch (error) {
+        res.json({ success: false, message: error.message })
+    }
+}
+export const deleteCourse = async (req, res) => {
+    const courseId = req.params.courseId
+    try {
+        const Course = await course.findByIdAndDelete(courseId)
+        if (!Course) {
+            return res.json({ success: false, message: "Course not found" });
+        }
+        res.json({ success: true, message: "Course deleted successfully", course: Course })
+    } catch (error) {
+        res.json({ success: false, message: error.message })
+    }
+}
