@@ -5,6 +5,7 @@ import cookieParser from 'cookie-parser'
 
 import auth from './route/authRoutes.js'
 import user from './route/userRoutes.js'
+import lessons from './route/lessonsRoutes.js'
 
 await connectDB()
 
@@ -17,5 +18,6 @@ app.use(cookieParser());
 
 app.use('/api/auth', auth)
 app.use('/api/user', user)
+app.use('/api/lessons', lessons)
 
 export default app

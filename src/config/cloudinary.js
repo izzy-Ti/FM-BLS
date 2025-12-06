@@ -14,9 +14,9 @@ cloudinary.config({
 export const storage = new CloudinaryStorage({
   cloudinary,
   params: {
-    folder: 'movies',
-    allowed_formats: ['jpg', 'jpeg', 'png', 'mp4', 'mov', 'webm'], // include video formats
-    resource_type: 'auto', // lets Cloudinary detect image/video automatically
+    folder: 'fm_bls_files',
+    allowed_formats: ['jpg', 'jpeg', 'png', 'mp4', 'mov', 'webm', 'mp3', 'wav', 'pdf'],
+    resource_type: 'auto',
     quality: 'auto:best',
     fetch_format: 'auto',
     transformation: [{ quality: 'auto:best' }]
@@ -31,8 +31,11 @@ export const upload = multer({
       'image/png',
       'image/jpg',
       'video/mp4',
-      'video/quicktime', // mov
-      'video/webm'
+      'video/quicktime',
+      'video/webm',
+      'audio/mpeg',
+      'audio/wav',
+      'application/pdf'
     ];
     if (allowedTypes.includes(file.mimetype)) {
       cb(null, true);
