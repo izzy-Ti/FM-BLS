@@ -6,14 +6,14 @@ import { isAdmin } from '../middleware/isAdmin.js'
 
 const router = Router()
 
-router.post('/createCourse', isAdmin, createCourse)
-router.post('/createLesson/:courseId', upload.single('file'), isAdmin, createLesson)
+router.post('/createCourse', userAuth, isAdmin, createCourse)
+router.post('/createLesson/:courseId', upload.single('file'), userAuth, isAdmin, createLesson)
 router.get('/getCourse/:courseId', getCourse)
 router.get('/getLessons/:lessonId', getLessons)
 router.get('/getLessonByCourse/:courseId', getLessonByCourse)
-router.delete('/deleteLesson/:lessonId', isAdmin, deleteLesson)
+router.delete('/deleteLesson/:lessonId', userAuth, isAdmin, deleteLesson)
 router.delete('/deleteCourse/:courseId', userAuth, isAdmin, deleteCourse)
-router.post('/completeLesson/:lessonId', completeLesson)
+router.post('/completeLesson/:lessonId', userAuth, completeLesson)
 router.post('/updateLesson/:lessonId', userAuth, isAdmin, updateLesson)
 router.post('/updateCourse/:courseId', userAuth, isAdmin, updateCourse)
 router.post('/enrollCourse/:courseId', userAuth, enrollCourse)
