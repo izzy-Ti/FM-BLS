@@ -217,7 +217,7 @@ export const completeLesson = async (req, res) => {
             return res.json({ success: false, message: "User not found" });
         }
         User.completedLessons.push(lessonId);
-        User.xp += Lesson.xp;
+        User.xp += 50;
 
         const today = new Date();
         today.setHours(0, 0, 0, 0);
