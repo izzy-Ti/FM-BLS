@@ -17,7 +17,6 @@ export const register = async (req, res) => {
     if (existedUser) {
       return res.json({ success: false, message: 'Email already existes' })
     }
-
     const hashedPassword = await bcrypt.hash(password, 10)
     const newUser = new user({
       email,
@@ -237,13 +236,40 @@ export const sendResetOTP = async (req, res) => {
     User.ResetOTP = OTP
     User.ResetOTPExpireAt = Date.now() + 15 * 60 * 1000
     await User.save()
-    const mailOption = ({
-      from: process.env.EMAIL,
-      to: User.email,
-      subject: 'Password reset OTP',
-      text: `Your OTP for reseting your password is ${OTP}. Use this OTP to proceed with reseting your password.`
-    })
-    await transporter.sendMail(mailOption)
+    const mailOption = {
+      sender: { email: process.env.EMAIL },
+      to: [{ email: User.email }],
+      subject: "Password Reset OTP",
+      htmlContent: `
+  <div style="font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px;">
+    <div style="background: #ffffff; padding: 25px; border-radius: 10px; max-width: 600px; margin: auto; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
+
+      <h2 style="text-align: center; color: #333;">Password Reset Request</h2>
+      <p style="text-align: center; color: #555; font-size: 15px;">
+        Use the OTP below to reset your password.
+      </p>
+
+      <div style="background: #f0f0f0; padding: 20px; border-radius: 8px; margin-top: 20px; text-align: center;">
+        <p style="font-size: 24px; letter-spacing: 3px; color: #222; font-weight: bold;">
+          ${OTP}
+        </p>
+      </div>
+
+      <p style="color: #666; font-size: 14px; margin-top: 20px;">
+        This OTP is valid for a limited time. If you didn’t request a password reset, you can safely ignore this email.
+      </p>
+
+      <p style="text-align: center; color: #aaa; margin-top: 30px; font-size: 13px;">
+        © ${new Date().getFullYear()} FM_BLS — All Rights Reserved.
+      </p>
+
+    </div>
+  </div>
+  `
+    };
+
+    await transporter.sendTransacEmail(mailOption);
+
     res.json({ success: true, message: 'OTP sent to your email' })
 
   } catch (error) {
