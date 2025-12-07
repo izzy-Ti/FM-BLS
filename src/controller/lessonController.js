@@ -254,10 +254,8 @@ export const completeLesson = async (req, res) => {
         if (User.xp >= 50000) {
             User.league = "DIAMOND"
         }
-        if (User.familyId && userFamily) {
-            userFamily.xp = (userFamily.xp || 0) + 50;
-            await userFamily.save();
-        }
+        userFamily.xp = (userFamily.xp || 0) + 50;
+        await userFamily.save();
         User.LastactionDate = new Date();
         await User.save();
         res.json({ success: true, message: "Lesson completed successfully", lesson: Lesson });
