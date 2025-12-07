@@ -230,9 +230,7 @@ export const completeLesson = async (req, res) => {
         const diffTime = today - lastAction;
         const diffDays = diffTime / (1000 * 60 * 60 * 24);
 
-        if (diffDays === 0) {
-            return res.json({ success: true, message: "Streak already updated today", streak: User.streak });
-        }
+
         if (diffDays === 1) {
             User.streak += 1;
         } else if (diffDays > 1) {
