@@ -215,7 +215,10 @@ export const completeLesson = async (req, res) => {
         }
         const User = await user.findById(userId);
         const userFamily = await family.findById(User.familyId);
-
+        if (User.familyId && userFamily) {
+            userFamily.xp = (userFamily.xp || 0) + 50;
+            await userFamily.save();
+        }
         if (!User) {
             return res.json({ success: false, message: "User not found" });
         }

@@ -44,7 +44,7 @@ export const submitQuiz = async (req, res) => {
         }
 
         if (User.completedQuizzes.includes(quizId)) {
-            return res.json({ success: true, message: "Quiz already completed", score: null, passed: true });
+            return res.json({ success: false, message: "Quiz already completed", score: null, passed: true });
         }
 
         let correctCount = 0;
