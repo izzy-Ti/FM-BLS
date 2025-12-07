@@ -1,5 +1,6 @@
 import { quiz } from "../models/quiz.js";
 import { user } from "../models/user.js";
+import { family } from "../models/family.js";
 
 export const createQuiz = async (req, res) => {
     const { courseId } = req.params;
@@ -69,7 +70,6 @@ export const submitQuiz = async (req, res) => {
             score,
             passed
         });
-
     } catch (error) {
         res.json({ success: false, message: error.message });
     }

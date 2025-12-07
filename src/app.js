@@ -10,6 +10,7 @@ import quiz from './route/quizRoutes.js'
 import errorHandler from './middleware/errorMiddleware.js'
 import leaderboard from './route/leaderBoard.js'
 import family from './route/familyRoute.js'
+import blog from './route/blogRoutes.js'
 
 await connectDB()
 
@@ -31,6 +32,7 @@ app.use('/api/lessons', lessons)
 app.use('/api/quiz', quiz)
 app.use('/api/leaderboard', leaderboard)
 app.use('/api/family', family)
+app.use('/api/blog', blog)
 
 app.use(errorHandler)
 

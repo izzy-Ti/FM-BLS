@@ -25,9 +25,6 @@ export const createLesson = async (req, res) => {
         if (!Course) {
             return res.json({ success: false, message: "Course not found" });
         }
-        if (userId !== Course.creator.toString()) {
-            return res.json({ success: false, message: "You are not authorized to create a lesson" })
-        }
         const newLesson = new lesson({
             title,
             order,
