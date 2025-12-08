@@ -4,11 +4,12 @@ import blog from "../models/blog.js";
 export const createBlog = async (req, res) => {
     try {
         const { title, content, author } = req.body;
-        const mediaFiles = req.files;
-        if (!mediaFiles || !title || !content || !author) {
+        const media = req.files;
+
+        if (!media || !title || !content || !author) {
             return res.json({ success: false, message: "All fields are required" });
         }
-        const mediaPaths = mediaFiles.map(file => file.path);
+        const mediaPaths = media.map(file => file.path);
 
         const newBlog = new blog({ title, content, author, media: mediaPaths });
         await newBlog.save();
@@ -72,4 +73,4 @@ export const searchBlog = async (req, res) => {
     } catch (error) {
         res.json({ success: false, message: error.message });
     }
-};  
+}; 
