@@ -1,5 +1,4 @@
-import blog from "../models/blog.js";
-
+import { blog } from "../models/blog.js";
 
 export const createBlog = async (req, res) => {
     try {
@@ -20,11 +19,11 @@ export const createBlog = async (req, res) => {
 };
 export const getBlog = async (req, res) => {
     try {
-        const blog = await blog.findById(req.params.id);
-        if (!blog) {
+        const Blog = await blog.findById(req.params.id);
+        if (!Blog) {
             return res.json({ success: false, message: "Blog not found" });
         }
-        res.json({ success: true, blog });
+        res.json({ success: true, Blog });
     } catch (error) {
         res.json({ success: false, message: error.message });
     }
@@ -41,35 +40,35 @@ export const updateBlog = async (req, res) => {
     try {
         const { title, content, author } = req.body;
         const media = req.file?.path;
-        const blog = await blog.findById(req.params.id);
-        if (!blog) {
+        const Blog = await blog.findById(req.params.id);
+        if (!Blog) {
             return res.json({ success: false, message: "Blog not found" });
         }
-        blog.title = title;
-        blog.content = content;
-        blog.author = author;
-        blog.media = media;
-        await blog.save();
-        res.json({ success: true, message: "Blog updated successfully", blog });
+        Blog.title = title;
+        Blog.content = content;
+        Blog.author = author;
+        Blog.media = media;
+        await Blog.save();
+        res.json({ success: true, message: "Blog updated successfully", Blog });
     } catch (error) {
         res.json({ success: false, message: error.message });
     }
 };
 export const deleteBlog = async (req, res) => {
     try {
-        const blog = await blog.findByIdAndDelete(req.params.id);
-        if (!blog) {
+        const Blog = await blog.findByIdAndDelete(req.params.id);
+        if (!Blog) {
             return res.json({ success: false, message: "Blog not found" });
         }
-        res.json({ success: true, message: "Blog deleted successfully", blog });
+        res.json({ success: true, message: "Blog deleted successfully", Blog });
     } catch (error) {
         res.json({ success: false, message: error.message });
     }
 };
 export const searchBlog = async (req, res) => {
     try {
-        const blogs = await blog.find({ title: { $regex: req.params.query, $options: "i" } });
-        res.json({ success: true, blogs });
+        const Blog = await blog.find({ title: { $regex: req.params.query, $options: "i" } });
+        res.json({ success: true, Blog });
     } catch (error) {
         res.json({ success: false, message: error.message });
     }

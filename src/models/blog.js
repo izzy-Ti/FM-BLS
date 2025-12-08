@@ -8,4 +8,4 @@ const blogSchema = new mongoose.Schema({
     author: String
 }, { timestamps: true });
 
-export default mongoose.model("Blog", blogSchema);
+export const blog = mongoose.model("Blog", blogSchema);
