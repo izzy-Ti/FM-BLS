@@ -217,7 +217,6 @@ export const completeLesson = async (req, res) => {
                 console.log(fam.xp)
                 fam.xp = (fam.xp || 0) + 50;
                 console.log(fam.xp)
-
                 await fam.save();
             }
         }
@@ -236,7 +235,7 @@ export const completeLesson = async (req, res) => {
         const diffDays = diffTime / (1000 * 60 * 60 * 24);
 
 
-        if (diffDays === 1) {
+        if (diffDays === 1 || User.streak == 0) {
             User.streak += 1;
         } else if (diffDays > 1) {
             User.streak = 1;
