@@ -47,7 +47,6 @@ export const updateBlog = async (req, res) => {
         Blog.title = title;
         Blog.content = content;
         Blog.author = author;
-        Blog.media = media;
         await Blog.save();
         res.json({ success: true, message: "Blog updated successfully", Blog });
     } catch (error) {
