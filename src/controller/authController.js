@@ -102,9 +102,6 @@ export const login = async (req, res) => {
     if (!User) {
       return res.json({ success: false, message: 'User not found' })
     }
-    if (!User.IsAccVerified) {
-      return res.json({ success: false, message: 'Please verify your account' })
-    }
     const isMatch = await bcrypt.compare(password, User.password)
     if (!isMatch) {
       return res.json({ success: false, message: 'Invalid credentials' })
@@ -144,8 +141,9 @@ export const sendVerifyOTP = async (req, res) => {
   const { userId } = req.body
   try {
     const User = await user.findById(userId)
-
-
+    if (User.IsAccVerified) {
+      return res.json({ success: false, message: 'Account already verified' })
+    }
     const OTP = String(Math.floor(100000 + Math.random() * 900000))
     User.verifyOTP = OTP
     User.OTPExpireAt = Date.now() + 24 * 60 * 60 * 1000
