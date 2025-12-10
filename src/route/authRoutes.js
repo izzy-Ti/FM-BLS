@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import { getUserData, isAuth, login, logout, register, resetPassword, sendResetOTP, sendVerifyOTP, updateProfile, verifyOTP } from '../controller/authController.js'
-import userAuth from '../middleware/authMiddleware.js'
+import userAuth, { isVerified } from '../middleware/authMiddleware.js'
 import { updateBadgeMiddle } from '../middleware/leagueMiddleware.js'
 
 const router = Router()
@@ -10,11 +10,11 @@ router.post('/login', login)
 router.post('/logout', logout)
 router.post('/send-verification-otp', userAuth, sendVerifyOTP)
 router.post('/verify-otp', userAuth, verifyOTP)
-router.post('/is-auth', userAuth, isAuth)
+router.post('/is-auth', userAuth, isVerified, isAuth)
 router.post('/send-reset-password', sendResetOTP)
 router.post('/reset-password', resetPassword)
 router.post('/get-user-data', userAuth, updateBadgeMiddle, getUserData)
-router.post('/updateProfile', userAuth, updateProfile)
+router.post('/updateProfile', userAuth, isVerified, updateProfile)
 
 
 export default router
