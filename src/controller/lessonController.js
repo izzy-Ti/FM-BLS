@@ -223,6 +223,10 @@ export const completeLesson = async (req, res) => {
         if (!User) {
             return res.json({ success: false, message: "User not found" });
         }
+        if (User.completedLessons.includes(lessonId)) {
+            return res.json({ success: false, message: "Lesson already completed" });
+        }
+
         User.completedLessons.push(lessonId);
         User.xp += 50;
 
