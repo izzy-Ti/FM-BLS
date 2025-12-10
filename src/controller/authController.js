@@ -102,6 +102,9 @@ export const login = async (req, res) => {
     if (!User) {
       return res.json({ success: false, message: 'User not found' })
     }
+    if (!User.IsAccVerified) {
+      return res.json({ success: false, message: 'Please verify your account' })
+    }
     const isMatch = await bcrypt.compare(password, User.password)
     if (!isMatch) {
       return res.json({ success: false, message: 'Invalid credentials' })
