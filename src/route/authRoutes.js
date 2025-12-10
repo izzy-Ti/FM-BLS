@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { getUserData, isAuth, login, logout, register, resetPassword, sendResetOTP, sendVerifyOTP, updateProfile, verifyOTP } from '../controller/authController.js'
+import { getUserData, googleAuth, isAuth, login, logout, register, resetPassword, sendResetOTP, sendVerifyOTP, updateProfile, verifyOTP } from '../controller/authController.js'
 import userAuth, { isVerified } from '../middleware/authMiddleware.js'
 import { updateBadgeMiddle } from '../middleware/leagueMiddleware.js'
 
@@ -15,6 +15,7 @@ router.post('/send-reset-password', sendResetOTP)
 router.post('/reset-password', resetPassword)
 router.post('/get-user-data', userAuth, updateBadgeMiddle, getUserData)
 router.post('/updateProfile', userAuth, isVerified, updateProfile)
+router.post('/google-auth', googleAuth)
 
 
 export default router

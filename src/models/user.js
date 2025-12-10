@@ -4,7 +4,7 @@ import mongoose from "mongoose";
 const UserSchema = new mongoose.Schema({
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
-    password: { type: String, required: true },
+    password: { type: String, default: null },
     verifyOTP: { type: String, default: '' },
     OTPExpireAt: { type: Number, default: 0 },
     IsAccVerified: { type: Boolean, default: false },
@@ -19,6 +19,8 @@ const UserSchema = new mongoose.Schema({
     enrolledCourses: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Course' }],
     completedLessons: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Lesson' }],
     completedQuizzes: [{ type: mongoose.Schema.Types.ObjectId, ref: 'quiz' }],
+    googleId: { type: String, default: null },
+    authType: { type: String, enum: ["local", "google"], default: "local" },
 }, { timestamps: true })
 
 export const user = mongoose.model('user', UserSchema)

@@ -3,6 +3,9 @@ import express from "express";
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 import transporter from "../config/nodeMailer.js";
+import { OAuth2Client } from "google-auth-library";
+
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 export const register = async (req, res) => {
   const { name, email, password, avater, role } = req.body
@@ -33,60 +36,6 @@ export const register = async (req, res) => {
       sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
       maxAge: 7 * 24 * 60 * 60 * 1000
     })
-    const mailOption = {
-      sender: { email: process.env.EMAIL },
-      to: [{ email: email }],
-      subject: "Welcome to FM_BLS!",
-      htmlContent: `
-    <div style="font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px;">
-      <div style="background: #ffffff; padding: 25px; border-radius: 10px; max-width: 650px; margin: auto; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
-
-        <div style="text-align: center;">
-          <h1 style="color: #333;">Welcome to FM_BLS, ${name}!</h1>
-          <p style="font-size: 16px; color: #666;">Your Bible learning journey starts here!</p>
-        </div>
-
-        <div style="background-color: #f0f0f0; padding: 20px; border-radius: 8px; margin-top: 20px;">
-          <p style="font-size: 18px; color: #333; font-weight: 600;">Your account has been created with the following details:</p>
-
-          <table style="width: 100%; margin-top: 10px; color: #333;">
-            <tr>
-              <td style="padding: 8px; font-weight: bold;">Name:</td>
-              <td style="padding: 8px;">${name}</td>
-            </tr>
-            <tr>
-              <td style="padding: 8px; font-weight: bold;">Email:</td>
-              <td style="padding: 8px;">${email}</td>
-            </tr>
-          </table>
-
-          <p style="font-size: 16px; margin-top: 20px; color: #444;">
-            To get the best out of FM_BLS, complete your profile by setting your Bible study preferences and joining a family group.
-          </p>
-
-          <div style="text-align: center; margin-top: 25px;">
-            <a href="https://fm-bls.astu.edu/profile"
-               style="background-color: #333; color: #fff; padding: 12px 25px; text-decoration: none; font-size: 16px; border-radius: 6px; font-weight: bold;">
-               Complete Your Profile
-            </a>
-          </div>
-        </div>
-
-        <p style="text-align: center; color: #888; margin-top: 30px;">
-          Need help? <a href="mailto:support@fm-bls.astu.edu" style="color: #333;">Contact us</a>.
-        </p>
-
-        <p style="text-align: center; font-size: 13px; color: #aaa; margin-top: 5px;">
-          &copy; ${new Date().getFullYear()} FM_BLS by Fellowship of ASTU — All Rights Reserved
-        </p>
-
-      </div>
-    </div>
-  `
-    };
-
-    await transporter.sendTransacEmail(mailOption);
-
     res.json({ success: true })
   } catch (error) {
     return res.json({ success: false, message: error.message })
@@ -153,31 +102,32 @@ export const sendVerifyOTP = async (req, res) => {
       to: [{ email: User.email }],
       subject: "Account Verification OTP",
       htmlContent: `
-    <div style="font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px;">
-      <div style="background: #ffffff; padding: 25px; border-radius: 10px; max-width: 600px; margin: auto; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
+<div style="font-family: Arial, sans-serif; background-color: #e8f5e9; padding: 20px;">
+  <div style="background: #ffffff; padding: 25px; border-radius: 10px; max-width: 600px; margin: auto; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
 
-        <h2 style="text-align: center; color: #333;">Account Verification</h2>
-        <p style="text-align: center; color: #555; font-size: 15px;">
-          Use the OTP below to verify your account.
-        </p>
+    <h2 style="text-align: center; color: #2e7d32;">Account Verification</h2>
+    <p style="text-align: center; color: #4e6e52; font-size: 15px;">
+      Use the OTP below to verify your account.
+    </p>
 
-        <div style="background: #f0f0f0; padding: 20px; border-radius: 8px; margin-top: 20px; text-align: center;">
-          <p style="font-size: 24px; letter-spacing: 3px; color: #222; font-weight: bold;">
-            ${OTP}
-          </p>
-        </div>
-
-        <p style="color: #666; font-size: 14px; margin-top: 20px;">
-          This OTP is valid for only a short time. If you did not request this, please ignore this email.
-        </p>
-
-        <p style="text-align: center; color: #aaa; margin-top: 30px; font-size: 13px;">
-          © ${new Date().getFullYear()} FM_BLS — All Rights Reserved.
-        </p>
-
-      </div>
+    <div style="background: #f1f8f5; padding: 20px; border-radius: 8px; margin-top: 20px; text-align: center; border: 1px solid #c8e6c9;">
+      <p style="font-size: 28px; letter-spacing: 4px; color: #1b5e20; font-weight: bold; margin: 0;">
+        ${OTP}
+      </p>
     </div>
-  `
+
+    <p style="color: #6d8f72; font-size: 14px; margin-top: 20px;">
+      This OTP is valid for only a short time. If you did not request this, please ignore this email.
+    </p>
+
+    <p style="text-align: center; color: #8aa892; margin-top: 30px; font-size: 13px;">
+      © ${new Date().getFullYear()} FM_BLS — All Rights Reserved.
+    </p>
+
+  </div>
+</div>
+`
+
     };
 
     await transporter.sendTransacEmail(mailOption);
@@ -208,6 +158,63 @@ export const verifyOTP = async (req, res) => {
     User.verifyOTP = '';
     User.OTPExpireAt = 0;
     await User.save()
+
+    const { name, email } = User;
+
+    const mailOption = {
+      sender: { email: process.env.EMAIL },
+      to: [{ email: email }],
+      subject: "Welcome to FM_BLS!",
+      htmlContent: `
+<div style="font-family: Arial, sans-serif; background-color: #e8f5e9; padding: 20px;">
+  <div style="background: #ffffff; padding: 25px; border-radius: 10px; max-width: 650px; margin: auto; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
+
+    <div style="text-align: center;">
+      <h1 style="color: #2e7d32;">Welcome to FM_BLS, ${name}!</h1>
+      <p style="font-size: 16px; color: #4e6e52;">Your Bible learning journey starts here!</p>
+    </div>
+
+    <div style="background-color: #f1f8f5; padding: 20px; border-radius: 8px; margin-top: 20px; border: 1px solid #c8e6c9;">
+      <p style="font-size: 18px; color: #2e7d32; font-weight: 600;">Your account has been created with the following details:</p>
+
+      <table style="width: 100%; margin-top: 10px; color: #2e2e2e;">
+        <tr>
+          <td style="padding: 8px; font-weight: bold; color: #1b5e20;">Name:</td>
+          <td style="padding: 8px;">${name}</td>
+        </tr>
+        <tr>
+          <td style="padding: 8px; font-weight: bold; color: #1b5e20;">Email:</td>
+          <td style="padding: 8px;">${email}</td>
+        </tr>
+      </table>
+
+      <p style="font-size: 16px; margin-top: 20px; color: #4e6e52;">
+        To get the best out of FM_BLS, complete your profile by setting your Bible study preferences and joining a family group.
+      </p>
+
+      <div style="text-align: center; margin-top: 25px;">
+        <a href="https://fm-bls.astu.edu/profile"
+           style="background-color: #66bb6a; color: #fff; padding: 12px 25px; text-decoration: none; font-size: 16px; border-radius: 6px; font-weight: bold;">
+           Complete Your Profile
+        </a>
+      </div>
+    </div>
+
+    <p style="text-align: center; color: #6d8f72; margin-top: 30px;">
+      Need help? <a href="mailto:support@fm-bls.astu.edu" style="color: #2e7d32;">Contact us</a>.
+    </p>
+
+    <p style="text-align: center; font-size: 13px; color: #8aa892; margin-top: 5px;">
+      &copy; ${new Date().getFullYear()} FM_BLS by Fellowship of ASTU — All Rights Reserved
+    </p>
+
+  </div>
+</div>
+`
+
+    };
+
+    await transporter.sendTransacEmail(mailOption);
     res.json({ success: true, message: 'Verification OTP verified successfully' })
   } catch (error) {
     return res.json({ success: false, message: error.message })
@@ -328,3 +335,58 @@ export const updateProfile = async (req, res) => {
     return res.json({ success: false, message: error.message })
   }
 }
+export const googleAuth = async (req, res) => {
+  try {
+    const { token } = req.body;
+    if (!token) {
+      return res.json({ success: false, message: "Missing token" });
+    }
+
+    const ticket = await client.verifyIdToken({
+      idToken: token,
+      audience: process.env.GOOGLE_CLIENT_ID,
+    });
+
+    const payload = ticket.getPayload();
+    const { email, name, picture, sub } = payload;
+
+    let User = await user.findOne({ email });
+
+
+    if (!User) {
+      User = new user({
+        name,
+        email,
+        avater: picture,
+        googleId: sub,
+        authType: "google",
+        IsAccVerified: true
+      });
+      await User.save();
+    }
+
+    if (!User.IsAccVerified) {
+      User.name = name;
+      User.avater = picture;
+      User.googleId = sub;
+      User.IsAccVerified = true;
+      User.authType = "google";
+      await User.save();
+    }
+
+    const jwtToken = jwt.sign({ id: User._id }, process.env.HASH_KEY, {
+      expiresIn: "7d",
+    });
+
+    res.cookie("token", jwtToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
+
+    res.json({ success: true, user: User });
+  } catch (error) {
+    res.json({ success: false, message: error.message });
+  }
+};
