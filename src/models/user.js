@@ -21,6 +21,8 @@ const UserSchema = new mongoose.Schema({
     completedQuizzes: [{ type: mongoose.Schema.Types.ObjectId, ref: 'quiz' }],
     googleId: { type: String, default: null },
     authType: { type: String, enum: ["local", "google"], default: "local" },
+    premium: { type: Boolean, default: false },
+    premiumExpireAt: { type: Number, default: 0 },
 }, { timestamps: true })
 
 export const user = mongoose.model('user', UserSchema)
