@@ -1,6 +1,9 @@
 import { user } from "../models/user.js";
 import Stripe from 'stripe';
 
+import transporter from "../config/nodeMailer.js";
+
+
 const stripe = new Stripe(process.env.STRIPE_KEY);
 
 
