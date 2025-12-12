@@ -25,6 +25,8 @@ app.use(cors
         credentials: true
     })
 )
+app.use('/api/payment/stripeWebhook', express.raw({ type: 'application/json' }), strpiWeebHook);
+
 app.use(express.json());
 app.use(cookieParser());
 
@@ -36,7 +38,6 @@ app.use('/api/leaderboard', leaderboard)
 app.use('/api/family', family)
 app.use('/api/blog', blog)
 app.use('/api/premium', premium)
-app.use('/api/payment/stripeWebhook', express.raw({ type: 'application/json' }), strpiWeebHook);
 
 
 app.use(errorHandler)
