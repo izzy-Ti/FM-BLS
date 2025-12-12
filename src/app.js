@@ -12,6 +12,7 @@ import leaderboard from './route/leaderBoard.js'
 import family from './route/familyRoute.js'
 import blog from './route/blogRoutes.js'
 import premium from './route/paymnetRoutes.js'
+import { strpiWeebHook } from './controller/premiumController.js'
 
 await connectDB()
 
@@ -24,7 +25,7 @@ app.use(cors
         credentials: true
     })
 )
-app.use(express.json())
+app.use(express.json());
 app.use(cookieParser());
 
 app.use('/api/auth', auth)
@@ -35,6 +36,8 @@ app.use('/api/leaderboard', leaderboard)
 app.use('/api/family', family)
 app.use('/api/blog', blog)
 app.use('/api/premium', premium)
+app.use('/api/payment/stripeWebhook', express.raw({ type: 'application/json' }), strpiWeebHook);
+
 
 app.use(errorHandler)
 

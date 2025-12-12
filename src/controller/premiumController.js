@@ -39,7 +39,8 @@ export const buyPremium = async (req, res) => {
         res.json({ success: false, message: error.message });
     }
 };
-export const strpieWeebHook = async (req, res) => {
+export const strpiWeebHook = async (req, res) => {
+    const sig = req.headers["stripe-signature"];
     const event = stripe.webhooks.constructEvent(req.body, sig, process.env.STRIPE_WEBHOOK_SECRET);
     if (event.type === 'checkout.session.completed') {
         const session = event.data.object;
