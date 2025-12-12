@@ -29,61 +29,6 @@ export const register = async (req, res) => {
     })
     await newUser.save()
 
-    const mailOption = {
-      sender: { email: process.env.EMAIL },
-      to: [{ email: newUser.email }],
-      subject: "Welcome to FMBLS!",
-      htmlContent: `
-        <div style="font-family: Arial, sans-serif; background-color: #e8f5e9; padding: 20px;">
-          <div style="background: #ffffff; padding: 25px; border-radius: 10px; max-width: 650px; margin: auto; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
-
-            <div style="text-align: center;">
-              <h1 style="color: #2e7d32;">Welcome to FMBLS, ${newUser.name}!</h1>
-              <p style="font-size: 16px; color: #4e6e52;">Your Bible learning journey starts now.</p>
-            </div>
-
-            <div style="background-color: #f1f8f5; padding: 20px; border-radius: 8px; margin-top: 20px; border: 1px solid #c8e6c9;">
-              <p style="font-size: 18px; color: #2e7d32; font-weight: 600;">Your account has been created successfully.</p>
-
-              <table style="width: 100%; margin-top: 10px; color: #2e2e2e;">
-                <tr>
-                  <td style="padding: 8px; font-weight: bold; color: #1b5e20;">Name:</td>
-                  <td style="padding: 8px;">${newUser.name}</td>
-                </tr>
-                <tr>
-                  <td style="padding: 8px; font-weight: bold; color: #1b5e20;">Email:</td>
-                  <td style="padding: 8px;">${newUser.email}</td>
-                </tr>
-              </table>
-
-              <p style="font-size: 16px; margin-top: 20px; color: #4e6e52;">
-                Start by setting up your study preferences and join a family group to grow spiritually with others.
-              </p>
-
-              <div style="text-align: center; margin-top: 25px;">
-                <a href="https://fm-bls.astu.edu/profile"
-                  style="background-color: #66bb6a; color: #fff; padding: 12px 25px; text-decoration: none; font-size: 16px; border-radius: 6px; font-weight: bold;">
-                  Complete Your Profile
-                </a>
-              </div>
-            </div>
-
-            <p style="text-align: center; color: #6d8f72; margin-top: 30px;">
-              Need help? <a href="mailto:support@fm-bls.astu.edu" style="color: #2e7d32;">Contact us</a>.
-            </p>
-
-            <p style="text-align: center; font-size: 13px; color: #8aa892; margin-top: 5px;">
-              &copy; ${new Date().getFullYear()} FMBLS — All Rights Reserved
-            </p>
-
-          </div>
-        </div>
-        `
-    };
-
-    await transporter.sendTransacEmail(mailOption);
-
-
     const token = jwt.sign({ id: newUser._id }, process.env.HASH_KEY, { expiresIn: '7d' })
     res.cookie('token', token, {
       httpOnly: true,
