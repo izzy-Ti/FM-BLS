@@ -16,6 +16,13 @@ const userAuth = async (req, res, next) => {
     } else {
       return res.json({ success: false, message: 'Not authorized please login again' })
     }
+    const User = await user.findById(tokenDecoded.id)
+    if (User.premium) {
+      if (User.premiumExpireAt < Date.now()) {
+        User.premium = false
+        await User.save()
+      }
+    }
     next();
   } catch (error) {
     return res.json({ success: false, message: error.message })
