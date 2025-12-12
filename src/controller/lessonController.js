@@ -2,6 +2,8 @@ import { course } from "../models/course.js";
 import { lesson } from "../models/lesson.js";
 import { user } from "../models/user.js";
 import { family } from "../models/family.js";
+import transporter from "../config/nodeMailer.js";
+
 
 export const createCourse = async (req, res) => {
     try {
@@ -67,8 +69,30 @@ export const getallcourses = async (req, res) => {
 }
 export const getLessons = async (req, res) => {
     const lessonId = req.params.lessonId
+    const userId = req.body.userId;
+
     try {
+        const User = await user.findById(userId);
         const Lesson = await lesson.findById(lessonId)
+
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        if (!User.lastLessonFetchDate || User.lastLessonFetchDate < today) {
+            User.lastLessonFetchDate = new Date();
+            User.ViewedLessonsToday = [];
+        }
+        if (!User.ViewedLessonsToday) {
+            User.ViewedLessonsToday = [];
+        }
+        if (!User.premium) {
+            if (User.ViewedLessonsToday.length >= 3) {
+                return res.json({ success: false, message: "Please upgrade to premium to complete more lessons" });
+            }
+        }
+        if (!User.ViewedLessonsToday.includes(lessonId)) {
+            User.ViewedLessonsToday.push(lessonId);
+        }
+        await User.save();
         if (!Lesson) {
             return res.json({ success: false, message: "Lesson not found" });
         }
@@ -84,7 +108,13 @@ export const getLessonByCourse = async (req, res) => {
         if (!Lesson) {
             return res.json({ success: false, message: "Lesson not found" });
         }
-        res.json({ success: true, message: "Lesson found successfully", lesson: Lesson })
+        const lessons = Lesson.map(l => ({
+            title: l.title,
+            order: l.order,
+            course: l.course,
+            _id: l._id
+        }));
+        res.json({ success: true, message: "Lesson found successfully", lesson: lessons })
     } catch (error) {
         res.json({ success: false, message: error.message })
     }
@@ -206,23 +236,29 @@ export const completeLesson = async (req, res) => {
     const lessonId = req.params.lessonId;
     const userId = req.body.userId;
     try {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
         const Lesson = await lesson.findById(lessonId);
         if (!Lesson) {
             return res.json({ success: false, message: "Lesson not found" });
         }
         const User = await user.findById(userId);
         const userFamily = await family.find({ members: userId });
-        if (userFamily) {
-            for (const fam of userFamily) {
-                console.log(fam.xp)
-                fam.xp = (fam.xp || 0) + 50;
-                console.log(fam.xp)
-                await fam.save();
-            }
-        }
+
         if (!User) {
             return res.json({ success: false, message: "User not found" });
         }
+
+        if (!User.lastLessonFetchDate || User.lastLessonFetchDate < today) {
+            User.lastLessonFetchDate = new Date();
+            User.ViewedLessonsToday = [];
+        }
+        if (!User.premium) {
+            if (User.ViewedLessonsToday.length >= 3) {
+                return res.json({ success: false, message: "Please upgrade to premium to complete more lessons" });
+            }
+        }
+
         if (User.completedLessons.includes(lessonId)) {
             return res.json({ success: false, message: "Lesson already completed" });
         }
@@ -230,8 +266,7 @@ export const completeLesson = async (req, res) => {
         User.completedLessons.push(lessonId);
         User.xp += 50;
 
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
+
         const lastAction = new Date(User.LastactionDate);
         lastAction.setHours(0, 0, 0, 0);
 
@@ -264,7 +299,13 @@ export const completeLesson = async (req, res) => {
             userFamily.xp = (userFamily.xp || 0) + 50;
             await userFamily.save();
         }
-        User.LastactionDate = new Date();
+        if (userFamily) {
+            for (const fam of userFamily) {
+                fam.xp = (fam.xp || 0) + 50;
+                await fam.save();
+            }
+        }
+
         await User.save();
         res.json({ success: true, message: "Lesson completed successfully", lesson: Lesson });
     } catch (error) {

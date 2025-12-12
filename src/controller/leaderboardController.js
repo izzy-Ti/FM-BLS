@@ -6,7 +6,8 @@ export const getLeaderboard = async (req, res) => {
         const leaderboard = users.map(user => ({
             name: user.name,
             xp: user.xp,
-            league: user.league
+            league: user.league,
+            premium: user.premium
         }));
         res.json({ success: true, leaderboard: leaderboard });
     } catch (error) {
