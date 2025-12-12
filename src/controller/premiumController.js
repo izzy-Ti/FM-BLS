@@ -1,4 +1,4 @@
-import { user } from "../models/user";
+import { user } from "../models/user.js";
 import Stripe from 'stripe';
 
 const stripe = new Stripe(process.env.STRIPE_KEY);
@@ -7,7 +7,11 @@ const stripe = new Stripe(process.env.STRIPE_KEY);
 export const buyPremium = async (req, res) => {
     try {
         const userId = req.body.userId;
-        const { amount, pkg } = req.body;
+        const pkg = Number(req.body.pkg);
+        let amount = 0;
+        if (pkg === 30) amount = 10;
+        else if (pkg === 180) amount = 100;
+        else if (pkg === 365) amount = 1000;
         const currentUser = await user.findById(userId);
         if (!currentUser) {
             return res.json({ success: false, message: "User not found" });
@@ -30,7 +34,7 @@ export const buyPremium = async (req, res) => {
             cancel_url: `${process.env.BASE_URL}/cancel`,
             metadata: { userId: userId.toString(), package: pkg },
         })
-        res.json({ success: true, message: "Premium bought successfully", session });
+        res.json({ success: true, message: "Premium bought successfully", url: session.url });
     } catch (error) {
         res.json({ success: false, message: error.message });
     }
@@ -49,6 +53,19 @@ export const strpieWeebHook = async (req, res) => {
         currentUser.premiumExpireAt = Date.now() + pkg * 24 * 60 * 60 * 1000;
         await currentUser.save();
         res.json({ success: true, message: "Premium bought successfully" });
+    }
+    else if (event.type === 'checkout.session.expired') {
+        const session = event.data.object;
+        const userId = session.metadata.userId;
+        const pkg = session.metadata.package;
+        const currentUser = await user.findById(userId);
+        if (!currentUser) {
+            return res.json({ success: false, message: "User not found" });
+        }
+        currentUser.premium = false;
+        currentUser.premiumExpireAt = 0;
+        await currentUser.save();
+        res.json({ success: true, message: "Premium expired successfully" });
     }
 }
 export const getPremium = async (req, res) => {

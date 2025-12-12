@@ -11,6 +11,7 @@ import errorHandler from './middleware/errorMiddleware.js'
 import leaderboard from './route/leaderBoard.js'
 import family from './route/familyRoute.js'
 import blog from './route/blogRoutes.js'
+import premium from './route/paymnetRoutes.js'
 
 await connectDB()
 
@@ -33,6 +34,7 @@ app.use('/api/quiz', quiz)
 app.use('/api/leaderboard', leaderboard)
 app.use('/api/family', family)
 app.use('/api/blog', blog)
+app.use('/api/premium', premium)
 
 app.use(errorHandler)
 
