@@ -75,14 +75,14 @@ export const getLessons = async (req, res) => {
 
         const today = new Date();
         today.setHours(0, 0, 0, 0);
+        if (!User.lastLessonFetchDate || User.lastLessonFetchDate < today) {
+            User.lastLessonFetchDate = new Date();
+            User.dailylesson = 0;
+        }
         if (!User.premium) {
             if (User.dailylesson >= 2) {
                 return res.json({ success: false, message: "Please upgrade to premium to complete more lessons" });
             }
-        }
-        if (!User.lastLessonFetchDate || User.lastLessonFetchDate < today) {
-            User.lastLessonFetchDate = new Date();
-            User.dailylesson = 0;
         }
         User.dailylesson++;
         await User.save();
@@ -241,6 +241,11 @@ export const completeLesson = async (req, res) => {
         if (!User) {
             return res.json({ success: false, message: "User not found" });
         }
+
+        if (!User.lastLessonFetchDate || User.lastLessonFetchDate < today) {
+            User.lastLessonFetchDate = new Date();
+            User.dailylesson = 0;
+        }
         if (!User.premium) {
             if (User.dailylesson >= 2) {
                 return res.json({ success: false, message: "Please upgrade to premium to complete more lessons" });
@@ -251,10 +256,6 @@ export const completeLesson = async (req, res) => {
             return res.json({ success: false, message: "Lesson already completed" });
         }
 
-        if (!User.lastLessonFetchDate || User.lastLessonFetchDate < today) {
-            User.lastLessonFetchDate = new Date();
-            User.dailylesson = 0;
-        }
         User.completedLessons.push(lessonId);
         User.xp += 50;
 
