@@ -79,8 +79,11 @@ export const getLessons = async (req, res) => {
             User.lastLessonFetchDate = new Date();
             User.ViewedLessonsToday = [];
         }
+        if (!User.ViewedLessonsToday) {
+            User.ViewedLessonsToday = [];
+        }
         if (!User.premium) {
-            if (User.ViewedLessonsToday.length >= 2) {
+            if (User.ViewedLessonsToday.length >= 3) {
                 return res.json({ success: false, message: "Please upgrade to premium to complete more lessons" });
             }
         }
@@ -249,7 +252,7 @@ export const completeLesson = async (req, res) => {
             User.ViewedLessonsToday = [];
         }
         if (!User.premium) {
-            if (User.ViewedLessonsToday.length >= 2) {
+            if (User.ViewedLessonsToday.length >= 3) {
                 return res.json({ success: false, message: "Please upgrade to premium to complete more lessons" });
             }
         }
