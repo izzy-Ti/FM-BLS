@@ -23,7 +23,7 @@ const UserSchema = new mongoose.Schema({
     authType: { type: String, enum: ["local", "google"], default: "local" },
     premium: { type: Boolean, default: false },
     premiumExpireAt: { type: Number, default: 0 },
-    dailylesson: { type: Number, default: 0 },
+    ViewedLessonsToday: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Lesson', default: null }],
     lastLessonFetchDate: { type: Date, default: null },
 }, { timestamps: true })
 
