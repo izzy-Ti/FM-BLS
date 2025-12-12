@@ -9,9 +9,9 @@ export const buyPremium = async (req, res) => {
         const userId = req.body.userId;
         const pkg = Number(req.body.pkg);
         let amount = 0;
-        if (pkg === 30) amount = 10;
-        else if (pkg === 180) amount = 100;
-        else if (pkg === 365) amount = 1000;
+        if (pkg === 30) amount = 2.29;
+        else if (pkg === 180) amount = 10.99;
+        else if (pkg === 365) amount = 22.99;
         const currentUser = await user.findById(userId);
         if (!currentUser) {
             return res.json({ success: false, message: "User not found" });
