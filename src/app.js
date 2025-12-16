@@ -13,6 +13,7 @@ import family from './route/familyRoute.js'
 import blog from './route/blogRoutes.js'
 import premium from './route/paymnetRoutes.js'
 import { strpiWeebHook } from './controller/premiumController.js'
+import admin from './route/adminRoute.js'
 
 await connectDB()
 
@@ -38,6 +39,7 @@ app.use('/api/leaderboard', leaderboard)
 app.use('/api/family', family)
 app.use('/api/blog', blog)
 app.use('/api/premium', premium)
+app.use('/api/admin', admin)
 
 
 app.use(errorHandler)
