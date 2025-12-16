@@ -2,7 +2,6 @@ import { course } from "../models/course.js";
 import { lesson } from "../models/lesson.js";
 import { user } from "../models/user.js";
 import { family } from "../models/family.js";
-import transporter from "../config/nodeMailer.js";
 
 
 export const createCourse = async (req, res) => {
