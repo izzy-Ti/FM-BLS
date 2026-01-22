@@ -1,109 +1,67 @@
-1. Folder / Project Structure (Conceptual)
+#FMBLS Bible Learning System (FMBLS)
 
-Main areas:
+Live App: https://fmbls.vercel.app
 
-Config: Database connections, environment setup.
+FMBLS is a **gamified Bible learning platform** focused on daily learning, reflection, and group growth through families and leader-led lessons.
 
-Middleware: Handles authentication, error handling, and optional rate limiting.
+## Core Idea
 
-Models: Define the structure of your data (Users, Lessons, Quizzes, Families, XP, Badges, Verse of the Day).
+Users learn through lessons, quizzes, and daily verses while earning **XP, badges, and streaks**. Families (groups) compete and grow together using collective progress and challenges.
 
-Controllers: Business logic for handling requests (e.g., logging in, completing lessons, submitting reflections).
+## Project Structure (Conceptual)
 
-Routes: Define endpoints users can access (e.g., login, get lessons, join family).
+* **Config** – Environment setup and database connections
+* **Middleware** – Authentication, authorization, error handling
+* **Models** – Users, Lessons, Quizzes, Families, XP, Badges, Verse of the Day
+* **Controllers** – Business logic (auth, XP, lessons, families, verses)
+* **Routes** – Public and protected API endpoints
+* **Utils** – XP calculation, badge rules, helper functions
 
-Utils: Helper functions like XP calculation, badge logic, or sending notifications.
+## Main Data Models
 
+* **User** – Profile, role, XP, streak, badges, family
+* **Lesson** – Learning content created by leaders
+* **Quiz** – Lesson-based questions and answers
+* **Family / Group** – Members, total XP, shared goals
+* **Verse of the Day** – Daily verse + user reflections
+* **Badge** – Achievement rewards based on milestones
 
-2. Models (Data Structures)
+## Key Features
 
-User:
-- Name, email, password, role (user/leader/admin)
-- XP, streak, last login date
-- Family reference
-- Badges collected
+### Authentication
 
-Lesson:
-- Title, content (text/video/audio), module
-- Creator (leader) reference
+* User registration and login
+* Role-based access (user, leader, admin)
 
-Quiz:
-- Questions for a lesson
-- Options and correct answers
+### Learning System
 
-Family / Group:
-- Name, motto, icon
-- Members
-- Total XP of family
-- Optional weekly challenges
+* Lessons with text, video, or audio
+* Quizzes linked to lessons
+* XP awarded on completion
 
-Verse of the Day:
-- Daily verse
-- Reflections from users
-- XP awarded for reflections
+### Families / Groups
 
-Badge:
-- Name, description, icon
-- Criteria for earning (e.g., complete 5 lessons, 7-day streak, etc.)
+* Create or join families
+* Track collective XP
+* Participate in shared challenges
 
+### Verse of the Day
 
-3. Controllers (Business Logic)
+* Daily verse for all users
+* Reflections earn bonus XP
+* Encourages daily engagement
 
-Auth Controller: Handles login, registration, and token generation.
+### Gamification
 
-User Controller: View/update profile, track XP and streaks, assign badges.
+* XP progression system
+* Daily streak tracking
+* Badges for achievements
+* User and family leaderboards
+* League tiers (Bronze → Platinum)
 
-Lesson Controller: Create, edit, delete, and view lessons.
+## Purpose
 
-Quiz Controller: Submit answers, calculate XP.
-
-Family Controller: Create/join families, track group progress, update family XP.
-
-Verse Controller: Fetch today’s verse, submit reflections, award bonus XP.
-
-Leaderboard Controller: Show global user leaderboard and family leaderboard, calculate leagues.
-
-
-4. Routes (Endpoints)
-
-Auth Routes: Register, login
-
-User Routes: Get profile, view XP, streak, badges
-
-Lesson Routes: List lessons, view lesson details, create lessons (leaders)
-
-Quiz Routes: Submit quiz answers
-
-Family Routes: Create family, join family, view family stats
-
-Verse Routes: Get verse of the day, submit reflection
-
-Leaderboard Routes: View top users and top families
-
-
-5. Middleware (Request Handling)
-
-Authentication: Ensure users are logged in and attach their info to requests.
-
-Authorization: Check if a user is a leader/admin before allowing lesson creation.
-
-Error Handling: Catch errors and send clear responses.
-
-Optional Rate Limiting: Prevent abuse by limiting requests per time period.
-
-
-6. Gamification Logic
-
-XP: Earned by completing lessons, quizzes, and submitting reflections.
-
-Streaks: Increase with consecutive learning days; resets if user misses a day.
-
-Leaderboards:
-- Users ranked by XP, with league tiers (Bronze → Silver → Gold → Platinum)
-- Families ranked by total collective XP
-
-Badges: Awarded for milestones (lesson completions, streaks, family achievements).
-
-Verse of the Day Challenge: Daily verse encourages reflections and bonus XP.
-
-Family Goals: Async challenges for families to earn badges and XP collectively.
+* Encourage consistent daily learning
+* Combine faith, reflection, and community
+* Motivate users through gamification
+* Scale from individual growth to group progress
