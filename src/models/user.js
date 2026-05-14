@@ -28,3 +28,5 @@ const UserSchema = new mongoose.Schema({
 }, { timestamps: true })
 
 export const user = mongoose.model('user', UserSchema)
+// Index for leaderboard ranking
+// userSchema.index({ streak: -1, xp: -1 });
