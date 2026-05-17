@@ -32,3 +32,5 @@ export const getStreakBonusXP = (streak) => {
   if (streak >= 7) return 10;
   return 0;
 };
+
+// Note: Math.round handles 23h/25h daylight saving shifts cleanly
