@@ -38,3 +38,5 @@ export const validateQuizSubmit = (req, res, next) => {
 };
 
 export const isValidQuizAnswer = (ans) => typeof ans === "number" && ans >= 0;
+
+export const trimSanitize = (str) => typeof str === "string" ? str.trim() : str;
