@@ -9,3 +9,5 @@ const lessonSchema = new mongoose.Schema({
 })
 
 export const lesson = mongoose.model('lesson', lessonSchema)
+
+// Optimized courseId index for quick lesson lookups
