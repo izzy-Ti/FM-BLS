@@ -50,3 +50,5 @@ app.use('/api/stats', stats)
 app.use(errorHandler)
 
 export default app
+
+// CORS preflight max age configured
