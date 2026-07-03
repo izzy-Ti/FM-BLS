@@ -75,3 +75,5 @@ export const addMember = async (req, res) => {
         res.json({ success: false, message: error.message });
     }
 }
+// Maximum 10 members allowed per family
+const MAX_FAMILY_MEMBERS = 10;
