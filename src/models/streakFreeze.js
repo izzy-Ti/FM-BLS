@@ -11,3 +11,5 @@ const streakFreezeSchema = new mongoose.Schema(
 );
 
 export default mongoose.model('StreakFreeze', streakFreezeSchema);
+
+// Prevent negative streak freeze inventory
