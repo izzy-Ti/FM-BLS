@@ -49,3 +49,5 @@ class MemoryCache {
 
 export const cache = new MemoryCache();
 export default cache;
+
+export const cacheVerse = (verse) => cache.set("daily_verse", verse, 24 * 3600 * 1000);
