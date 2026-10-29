@@ -38,3 +38,5 @@ export default {
   verifyToken,
   decodeTokenWithoutVerify,
 };
+
+export const isTokenExpired = (payload) => !payload?.exp || Date.now() >= payload.exp * 1000;
