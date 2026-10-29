@@ -85,3 +85,4 @@ export const updateBadge = async (req, res) => {
         res.json({ success: false, message: error.message })
     }
 }
+// Sanitized user profile responses
