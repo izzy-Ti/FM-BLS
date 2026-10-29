@@ -38,3 +38,5 @@ export const checkAndAwardBadges = async (userId, context = {}) => {
 
   return earnedBadges;
 };
+
+// Deduplicate notification triggers
