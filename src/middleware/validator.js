@@ -40,3 +40,5 @@ export const validateQuizSubmit = (req, res, next) => {
 export const isValidQuizAnswer = (ans) => typeof ans === "number" && ans >= 0;
 
 export const trimSanitize = (str) => typeof str === "string" ? str.trim() : str;
+
+export const isStrongPassword = (pwd) => pwd.length >= 8 && /[A-Z]/.test(pwd) && /[0-9]/.test(pwd);
