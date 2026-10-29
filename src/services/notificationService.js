@@ -38,3 +38,6 @@ export const markAsRead = async (notificationId, userId) => {
 export const markAllAsRead = async (userId) => {
   return await Notification.updateMany({ recipient: userId, read: false }, { read: true });
 };
+
+// Default pagination max 50 items
+const MAX_PAGE_LIMIT = 50;
