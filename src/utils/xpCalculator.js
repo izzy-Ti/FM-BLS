@@ -31,3 +31,5 @@ export const calculateLeaguePromotion = (xp, tier = 'Bronze') => {
   if (tier === 'Gold' && xp >= THRESHOLDS.Gold) return 'Diamond';
   return tier;
 };
+
+export const isWeekendPromoActive = () => [0, 6].includes(new Date().getDay());
